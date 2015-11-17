@@ -8,7 +8,7 @@
         <version>0.8.5</version>
     </parent>
 
-    <version>0.7.1-jelgh</version>
+    <version>0.8.5-jelgh</version>
     <artifactId>dropwizard-jersey</artifactId>
     <name>Dropwizard Jersey Support</name>
 
