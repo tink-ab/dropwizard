@@ -65,9 +65,28 @@ public class JacksonMessageBodyProvider extends JacksonJaxbJsonProvider {
                                                     entityStream));
     }
 
+    // Used to print only once, as not to generate too much noisy output
+    private static boolean patchedCaseWasExecuted = false;
+    private static boolean wasExecuted = false;
+
     private Object validate(Annotation[] annotations, Object value) {
         
         final Class<?>[] classes = findValidationGroups(annotations);
+
+        // Temporary logging to determine if there is ever any execution path in the aggregation service that causes Johannes' patch to make a difference in practice.
+        // If not, we can delete this patched version of dropwizard and simplify our dependency management in tink-backend-aggregation.
+        if (value == null && classes == null) {
+            if (!patchedCaseWasExecuted) {
+                String stacktrace = Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n');
+                System.out.println("Executing dropwizard 0.7.1-jelgh validate method. Stacktrace:\n" + stacktrace);
+                patchedCaseWasExecuted = true;
+            }
+        } else {
+            if (!wasExecuted) {
+                System.out.println("Executing dropwizard 0.7.1-jelgh validate method.");
+                wasExecuted = true;
+            }
+        }
 
         if (classes != null) {
             if(null == value) {
